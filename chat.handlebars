@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat</title>
+</head>
+<body>
+  <h1>Chat en Tiempo Real</h1>
+  <ul id="chatMessages"></ul>
+  <form id="sendMessageForm">
+    <input type="text" id="messageInput" placeholder="Escribe tu mensaje">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on('chatMessage', (message) => {
+      const chatMessages = document.getElementById('chatMessages');
+      const li = document.createElement('li');
+      li.textContent = `${message.user}: ${message.message}`;
+      chatMessages.appendChild(li);
+    });
+
+    document.getElementById('sendMessageForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value.trim();
+      if (message !== '') {
+        socket.emit('sendMessage', { user: '<correo_del_usuario>', message });
+        messageInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
